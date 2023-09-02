@@ -5,12 +5,8 @@ import os
 from os.path import dirname, join
 from dotenv import load_dotenv
 
-#SetUP env
-dotenv_path = join(dirname,(__file__), '.env')
-load_dotenv(dotenv_path)
-
-MONGODB_URI = os.environ.get('MONGODB_URI')
-DB_NAME = os.environ.get('DB_NAME')
+MONGODB_URI = "mongodb+srv://dimasnugroho022:revaille12@cluster0.jtez2s5.mongodb.net/?retryWrites=true&w=majority"
+DB_NAME = "dbsparta"
 
 # connect_string = 'mongodb+srv://dimasnugroho022:revaille12@cluster0.jtez2s5.mongodb.net/?retryWrites=true&w=majority'
 client = MongoClient(MONGODB_URI)
@@ -39,22 +35,24 @@ def save_diary():
     save_to = f'static/{filename}'
     file.save(save_to)
 
-    # profile = request.files['profile_give']
-    # extension = profile.filename.split('.')[-1]
-    # today = datetime.now()
-    # mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
-    # profile_name = f'profile-{mytime}.{extension}'
-    # save_to = f'static/{profile_name}'
-    # profile.save(save_to)
+    profile = request.files['profile_give']
+    extension = profile.filename.split('.')[-1]
+    today = datetime.now()
+    mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
+    profile_name = f'profile-{mytime}.{extension}'
+    save_to = f'static/{profile_name}'
+    profile.save(save_to)
 
     title_receive = request.form.get('title_give')
     content_receive = request.form.get('content_give')
+    
     doc = {
         'file': filename,
-        # 'profile': profile_name,
+        'profile': profile_name,
         'title': title_receive,
         'content': content_receive
     }
+    
     db.diary.insert_one(doc)
     return jsonify({'message': 'data was saved!'})
 
